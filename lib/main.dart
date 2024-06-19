@@ -4,7 +4,7 @@ import 'package:watermark/Components/account_information.dart';
 import 'package:watermark/Components/linkedaccount_table.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: AccountPageWatermark(),
+      home: const AccountPageWatermark(),
     );
   }
 }
@@ -40,7 +40,7 @@ class AccountPageWatermark extends StatelessWidget {
               children: [
                 // 40% Account Information Details
                 Container(
-                  width: 370,
+                  width: (MediaQuery.of(context).size.width * 30) / 100,
                   height: 780,
                   decoration: BoxDecoration(
                     color: Colors.blue[100],
@@ -51,29 +51,30 @@ class AccountPageWatermark extends StatelessWidget {
                 const SizedBox(
                   width: 10,
                 ), // Space between Account Information Details and Table
-                Flexible(
-                  child: Container(
-                    width: MediaQuery.of(context).size.width,
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.black),
-                    ),
-                    child: AccountInformationTable(),
+                Container(
+                  height: 400,
+                  width: (MediaQuery.of(context).size.width * 68) / 100,
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black),
                   ),
+                  child: const AccountInformationTable(),
                 ),
                 const SizedBox(
                   width: 10,
-                ), //
+                ),
               ],
             ),
             const SizedBox(
               height: 20,
             ), // Space between the first row and the second row
             Container(
+              height: 350,
+              width: (MediaQuery.of(context).size.width * 100) / 100,
               decoration: BoxDecoration(
                 color: Colors.green[100],
                 border: Border.all(color: Colors.black),
               ),
-              child: AccountInfoPageTable(),
+              child: const AccountInfoPageTable(),
             ),
           ],
         ),
@@ -82,13 +83,15 @@ class AccountPageWatermark extends StatelessWidget {
   }
 }
 
-Widget Watermark(
-    {required Widget child,
-    required String watermarkText,
-    bool multipleWatermarks = false,
-    int numberOfWatermarks = 1,
-    double height = 100.00,
-    double width = 100.00}) {
+Widget Watermark({
+  required Widget child,
+  required String watermarkText,
+  bool multipleWatermarks = false,
+  int numberOfWatermarks = 1,
+  double height = 100.00,
+  double width = 100.00,
+  horizontalMultipleWatermarks = false,
+}) {
   // Calculate the dynamic height based on the number of watermarks
 
   return Stack(
@@ -96,25 +99,24 @@ Widget Watermark(
       child,
       if (!multipleWatermarks) MyWaterMark(text: watermarkText),
       if (multipleWatermarks)
-        Align(
-          alignment: Alignment.center,
-          child: Container(
-            width: width,
-            height: height,
-            //width: 300,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                for (var i = 0; i < numberOfWatermarks; i++)
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
+        SizedBox(
+          height: height,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              for (var i = 0; i < numberOfWatermarks; i++)
+                Row(
+                  mainAxisAlignment: horizontalMultipleWatermarks
+                      ? MainAxisAlignment.spaceEvenly
+                      : MainAxisAlignment.center,
+                  children: [
+                    MyWaterMark(text: watermarkText),
+                    if (horizontalMultipleWatermarks)
                       MyWaterMark(text: watermarkText),
-                    ],
-                  ),
-              ],
-            ),
+                  ],
+                ),
+            ],
           ),
         ),
     ],
@@ -127,18 +129,16 @@ class MyWaterMark extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Positioned.fill(
-      child: Transform.rotate(
-        angle: -0.785398, // 45 degrees in radians
-        child: Opacity(
-          opacity: 0.7,
-          child: Center(
-            child: Text(
-              text,
-              style: const TextStyle(
-                fontSize: 30,
-                fontWeight: FontWeight.bold,
-              ),
+    return Transform.rotate(
+      angle: -0.785398, // 45 degrees in radians
+      child: Opacity(
+        opacity: 0.1,
+        child: Center(
+          child: Text(
+            text,
+            style: const TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
             ),
           ),
         ),
@@ -148,16 +148,16 @@ class MyWaterMark extends StatelessWidget {
 }
 
 getNoOfWatermarks(height) {
-  int no_of_watermarks = 0;
-  if (height <= 200)
-    no_of_watermarks = 1;
-  else if (height <= 400)
-    no_of_watermarks = 2;
+  int noOfWatermarks = 0;
+  if (height <= 200) {
+    noOfWatermarks = 1;
+  } else if (height <= 400)
+    noOfWatermarks = 2;
   else if (height <= 600)
-    no_of_watermarks = 3;
+    noOfWatermarks = 3;
   else if (height <= 800)
-    no_of_watermarks = 4;
+    noOfWatermarks = 4;
   else
-    no_of_watermarks = 5;
-  return no_of_watermarks;
+    noOfWatermarks = 5;
+  return noOfWatermarks;
 }

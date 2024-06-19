@@ -7,17 +7,18 @@ class AccountInformation extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
+    
         builder: (BuildContext context, BoxConstraints constraints) {
       double height = constraints.maxHeight;
       double width = constraints.maxWidth;
-      print('height is =>' + height.toString());
-      int no_of_watermarks = 0;
-      no_of_watermarks = getNoOfWatermarks(height);
+      //print('height is =>' + height.toString());
+      int noOfWatermarks = 0;
+      noOfWatermarks = getNoOfWatermarks(height);
 
       return Watermark(
         height: height,
         width: width,
-        numberOfWatermarks: no_of_watermarks,
+        numberOfWatermarks: noOfWatermarks,
         multipleWatermarks: true,
         watermarkText: '23456',
         child: const Padding(
