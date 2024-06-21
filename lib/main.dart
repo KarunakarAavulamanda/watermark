@@ -57,7 +57,7 @@ class AccountPageWatermark extends StatelessWidget {
                   decoration: BoxDecoration(
                     border: Border.all(color: Colors.black),
                   ),
-                  child: const AccountInformationTable(),
+                  child: const LinkedAccountTable(),
                 ),
                 const SizedBox(
                   width: 10,
